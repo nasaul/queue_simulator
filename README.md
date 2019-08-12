@@ -1,1 +1,3 @@
-# queue_simulator
+# Queue simulator
+
+An R interface with C++ to simulate queues.
