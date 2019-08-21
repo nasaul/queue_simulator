@@ -26,11 +26,11 @@ int multinom(arma::mat trans_matrix, int state, const gsl_rng * r, int K){
   for(int i = 0; i < K; i++){
     prob[i] = trans_matrix(state - 1, i);
   }
-  Rcpp::IntegerVector x(K);
-  gsl_ran_multinomial(r, K, 1, prob, (unsigned int *) x.begin());
-  int val;
-  for(int i = 0; i < K; i++){
-    if(x(i) == 1){
+  unsigned int x[K];
+  gsl_ran_multinomial(r, K, 1, prob, x);
+  int val = 0;
+  for(int i = 0; val == 0; i++){
+    if(x[i] == 1){
       val = i + 1;
     }
   }
@@ -38,12 +38,12 @@ int multinom(arma::mat trans_matrix, int state, const gsl_rng * r, int K){
 }
 
 // [[Rcpp::export]]
-Rcpp::IntegerVector sim_mc(int P, arma::mat transition_matrix, int seed){
+Rcpp::IntegerVector sim_mc(int P, arma::mat transition_matrix, int seed, int init){
   int states = transition_matrix.n_cols;
-  Rcpp::IntegerVector sim(P);
   gsl_rng * rand_gen = gsl_rng_alloc(gsl_rng_taus);
   gsl_rng_set(rand_gen, seed);
-  sim(0) = 1;
+  Rcpp::IntegerVector sim(P);
+  sim(0) = init;
   for(int i = 1; i < P; i++){
     sim(i) = multinom(transition_matrix, sim(i - 1), rand_gen, states);
   }
