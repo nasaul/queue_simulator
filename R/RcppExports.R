@@ -5,3 +5,7 @@ create_matrix <- function(n) {
     .Call(`_QueueSimulator_create_matrix`, n)
 }
 
+sim_mc <- function(P, transition_matrix, seed, init) {
+    .Call(`_QueueSimulator_sim_mc`, P, transition_matrix, seed, init)
+}
+

@@ -18,9 +18,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sim_mc
+Rcpp::IntegerVector sim_mc(int P, arma::mat transition_matrix, int seed, int init);
+RcppExport SEXP _QueueSimulator_sim_mc(SEXP PSEXP, SEXP transition_matrixSEXP, SEXP seedSEXP, SEXP initSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type P(PSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type transition_matrix(transition_matrixSEXP);
+    Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
+    Rcpp::traits::input_parameter< int >::type init(initSEXP);
+    rcpp_result_gen = Rcpp::wrap(sim_mc(P, transition_matrix, seed, init));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_QueueSimulator_create_matrix", (DL_FUNC) &_QueueSimulator_create_matrix, 1},
+    {"_QueueSimulator_sim_mc", (DL_FUNC) &_QueueSimulator_sim_mc, 4},
     {NULL, NULL, 0}
 };
 
