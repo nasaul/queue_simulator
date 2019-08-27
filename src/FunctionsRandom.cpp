@@ -1,11 +1,3 @@
-//
-//  Functions.cpp
-//  TestFunctionsRcpp
-//
-//  Created by Luis Moncayo on 8/23/19.
-//  Copyright © 2019 Luis Moncayo. All rights reserved.
-//
-
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::depends(RcppGSL)]]
 #include <RcppArmadillo.h>

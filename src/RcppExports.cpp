@@ -32,10 +32,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// SimulaGGs
+Rcpp::List SimulaGGs(Rcpp::IntegerVector NDatos, Rcpp::NumericVector Programa, Rcpp::NumericVector Par);
+RcppExport SEXP _QueueSimulator_SimulaGGs(SEXP NDatosSEXP, SEXP ProgramaSEXP, SEXP ParSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type NDatos(NDatosSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type Programa(ProgramaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type Par(ParSEXP);
+    rcpp_result_gen = Rcpp::wrap(SimulaGGs(NDatos, Programa, Par));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_QueueSimulator_create_matrix", (DL_FUNC) &_QueueSimulator_create_matrix, 1},
     {"_QueueSimulator_sim_mc", (DL_FUNC) &_QueueSimulator_sim_mc, 4},
+    {"_QueueSimulator_SimulaGGs", (DL_FUNC) &_QueueSimulator_SimulaGGs, 3},
     {NULL, NULL, 0}
 };
 

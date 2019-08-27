@@ -9,3 +9,7 @@ sim_mc <- function(P, transition_matrix, seed, init) {
     .Call(`_QueueSimulator_sim_mc`, P, transition_matrix, seed, init)
 }
 
+SimulaGGs <- function(NDatos, Programa, Par) {
+    .Call(`_QueueSimulator_SimulaGGs`, NDatos, Programa, Par)
+}
+

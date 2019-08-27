@@ -1,11 +1,3 @@
-//
-//  SupportFunctions.cpp
-//  TestFunctionsRcpp
-//
-//  Created by Luis Moncayo on 8/23/19.
-//  Copyright © 2019 Luis Moncayo. All rights reserved.
-//
-
 #include "SupportFunctions.h"
 #include <cstdlib>
 

@@ -38,3 +38,5 @@ rsconnect/
 # src/
 src/*.so
 src/*.o
+#Try examples
+try.R
