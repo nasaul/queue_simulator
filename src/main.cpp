@@ -1,3 +1,4 @@
+#include <Rcpp.h>
 #include "FunctionsRandom.h"
 #include "SupportFunctions.h"
 
