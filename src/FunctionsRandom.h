@@ -5,5 +5,7 @@
 
 double RanMT(void);
 double ExpoMT(const double &beta);
-bool ExpoVec(long &NExpo, double Tiempos[], double &Media);
+double UnifMT(double &a, double &b);
+double ExpoMT(const double &beta);
+double NormMT(double &media,double &des);
 #endif /* Functions_h */
