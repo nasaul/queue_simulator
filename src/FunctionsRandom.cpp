@@ -1,20 +1,11 @@
 #include <math.h>
 #include <stdio.h>
-#include <iostream>
+#include <Rcpp.h>
 #include "FunctionsRandom.h"
 #include "RandomNumbers.h"
-
-
 double RanMT(void)
 {
   return (((double)genrand_int32()) + 0.5)*(1.0/4294967296.0);
-}
-//--++--++--++--++--++--++--++--++--++--++--++--++--++--++--++--++--++--++--++--++--++
-double ExpoMT(const double &beta)
-{
-  double uni;
-  uni = RanMT();
-  return (-beta * log(uni));
 }
 //-------------------------------------------------------------------------
 //Genera una Distribucion Uniforme con parametros a y b
@@ -37,8 +28,9 @@ double Unif2MT(double a, double b)
 //-------------------------------------------------------------------------
 //Genera una Distribucion Exponencial con esperanza beta
 //-------------------------------------------------------------------------
-double ExpoMT(const double &beta)
+double ExpoMT(Rcpp::NumericVector params)
 {
+  double beta = params[0];
   double uni;
   uni = RanMT();
   return (-beta * log(uni));
@@ -386,19 +378,6 @@ double EmpMT(double x[], long &n)
 {// Generación de un valor aleatorio de x (distribución empírica)
   return x[(long)floor((double)n * RanMT())];
 }
-void genera_binomial(double q[], long alias[],long &n,double prob[],
-  double x[], double &p, long small1[], long big[])
-  {//Calcula arreglos necesarios para generar una binomial usando método alias
-    long i;
-    long n1;
-    for(i=0; i<n+1;i++)
-    {
-      prob[i+1]=bin_prob(n,p,i);
-      x[i+1]= i;
-    }
-    n1= n+1;
-    genera_alias(n1,prob,alias,q,small1,big);
-  }
 
   long  PoisMT(double &tasa, double &exptasa)
   // Generación de muestra de VA Poisson usando transformación inversa
@@ -523,75 +502,3 @@ void genera_binomial(double q[], long alias[],long &n,double prob[],
       calc=pow(uni/(1-uni), 1/alfa);
       return (beta*calc);
     }
-    //-------------------------------------------------------------------------
-    //Generador de una Normal Multivariada-donde ya se asume que sigma[] ha sido
-    //descompuesta con el procedimiento de Cholesky
-    //-------------------------------------------------------------------------
-    void NorMMT(long &d, double media[], double chol[], double x[])
-    { long i,j; double m=0.0,des=1.0;
-      VecDoub z(d);
-      {
-        for (i=1; i <= d;i++) z[i]= Norm2MT(m,des);
-        for (i=1; i <= d;i++)
-        {
-          x[i]= media[i];
-          for (j=1; j<=i;j++) x[i]= x[i]+chol[(i-1)*d+j]*z[j];
-        }
-      }
-    }
-    bool   AjustePPNE(long &NInt, double LimSup[], long &NDatos, double Datos[], double Tasa[],
-      double Cum[], long &NRep)
-      { //Estima las tasas de llegadas (por hora) en intervalos, a partir de los datos de llegadas en Datos[]
-        //Devuelve también el arreglo Cum() para generar el PPNE usando NextPPNE
-        long i, Intervalo;
-        for (i=1; i <= NDatos;i++)
-        { Intervalo = 1;
-          while ((Datos[i] > LimSup[Intervalo]) && (Intervalo <= NInt)) Intervalo += 1;
-          Tasa[Intervalo] += 1.0;
-        }
-        Cum[0] = 0.0;
-        for (i=1; i <= NInt;i++)
-        { Tasa[i] = Tasa[i] / (double)NRep; Cum[i] = Cum[i-1] + Tasa[i]; Tasa[i] = Tasa[i] / (LimSup[i] - LimSup[i-1]);
-        }
-        return true;
-      }
-      double NextPPNE(double &Actual, long &NInt, double Tasa[], double LimSup[], double Cum[],
-        long &Intervalo)
-        { //Genera la siguiente llegada en un PPNE con función de intensidad periódica y constante por tramos
-          long k; double W, media=1.0, t1;
-          Actual += ExpoMT(media); k = floor(Actual / Cum[NInt]);  //Número de días transcurridos
-          W = Actual - (double)k * Cum[NInt];        //Hora del día
-          //Se busca el intervalo
-          Intervalo = 1;
-          while (W > Cum[Intervalo]) Intervalo += 1;
-          t1 = W - Cum[Intervalo - 1];
-          return (double)k * LimSup[NInt] + LimSup[Intervalo - 1] + t1 / Tasa[Intervalo];
-        }
-        bool  AjusteLeemis(long &NRep, long &NDatos, double Datos[], double &KKEN, double Dif[])
-        { // Devuelve los datos ordenados y los valores necesarios para usar la función NextPPNEL
-          long i, *Mark; long uno = 1;
-          Mark = ivector(0, NDatos); sortdll(Datos, uno, NDatos, Mark);
-          KKEN = (double)NRep + (double)NRep / (double)NDatos;
-          for (i=0; i <= NDatos;i++) Dif[i] = Datos[i+1] - Datos[i];
-          return true;
-        }
-        double NextPPNEL(double &Actual, long &NDatos, double Datos[], double Dif[], double &KKNE)
-        { // Genera la próxima llegada en un PPNE usando el estimador no paramétrico de Leemis
-          long k; double Temp, media=1.0;
-          Actual += ExpoMT(media); Temp = Actual * KKNE; k = floor(Temp);
-          if (k >= NDatos + 1) return  Datos[NDatos + 1];
-          else return Datos[k] + Dif[k] * (Temp - (double)k);
-        }
-        void DiriMT(double a[], double x[], long &K)
-        {// Genera un vector x distribuido como Dirichlet con parámteros K y a
-          int i, K1 = K; VecDoub y(K1+1);  double Sumay = 0.0, Temp = 0.0, b = 1.0;
-          for (i=1; i <= K1;i++)
-          {
-            y[i] = GammMT(a[i], b); Sumay +=  y[i];
-          }
-          for (i=1; i < K1;i++)
-          {
-            x[i] = y[i] / Sumay; Temp += x[i];
-          }
-          x[K1] = 1.0 - Temp;
-        }
