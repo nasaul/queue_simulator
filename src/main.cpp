@@ -28,18 +28,39 @@
 
    if(dist_atencion[0] == "exp"){
      if(param_atencion.length() != 1){
-       Rcpp::stop("'param_atencion' with exponential distribution must be length 1.");
+       Rcpp::stop("'param_llegadas' with exponential distribution must be length 1.");
      }
      ratention = ExpoMT;
+   } else if(dist_atencion[0] == "norm"){
+     if(param_atencion.length() != 2){
+       Rcpp::stop("'param_llegadas' with normal distribution must be length 2.");
+     }
+     ratention = NormMT;
+   } else if(dist_atencion[0] == "unif"){
+     if(param_atencion.length() != 2){
+       Rcpp::stop("'param_llegadas' with uniform distribution must be length 2.");
+     }
+     ratention = UnifMT;
    } else {
      Rcpp::stop("Distribution name not defined.");
    }
+
 
    if(dist_llegadas[0] == "exp"){
      if(param_llegadas.length() != 1){
        Rcpp::stop("'param_llegadas' with exponential distribution must be length 1.");
      }
      rarrival = ExpoMT;
+   } else if(dist_llegadas[0] == "norm"){
+     if(param_llegadas.length() != 2){
+       Rcpp::stop("'param_llegadas' with normal distribution must be length 2.");
+     }
+     rarrival = NormMT;
+   } else if(dist_llegadas[0] == "unif"){
+     if(param_llegadas.length() != 2){
+       Rcpp::stop("'param_llegadas' with uniform distribution must be length 2.");
+     }
+     rarrival = UnifMT;
    } else {
      Rcpp::stop("Distribution name not defined.");
    }

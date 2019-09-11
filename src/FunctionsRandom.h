@@ -6,6 +6,6 @@
 
 double RanMT(void);
 double ExpoMT(Rcpp::NumericVector params);
-// double UnifMT(double &a, double &b);
-// double NormMT(double &media,double &des);
+double UnifMT(Rcpp::NumericVector params);
+double NormMT(Rcpp::NumericVector params);
 #endif /* Functions_h */

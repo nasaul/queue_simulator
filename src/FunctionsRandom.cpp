@@ -10,9 +10,11 @@ double RanMT(void)
 //-------------------------------------------------------------------------
 //Genera una Distribucion Uniforme con parametros a y b
 //-------------------------------------------------------------------------
-double UnifMT(double &a, double &b)
+double UnifMT(Rcpp::NumericVector params)
 {
   double uni;
+  double a = params[0];
+  double b = params[0];
   uni = RanMT();
   uni = a + (b - a) * uni;
   return uni;
@@ -38,8 +40,10 @@ double ExpoMT(Rcpp::NumericVector params)
 //-------------------------------------------------------------------------
 //Genera una Distribucion normal con media media y desvest des
 //-------------------------------------------------------------------------
-double NormMT(double &media,double &des)
+double NormMT(Rcpp::NumericVector params)
 {//Algoritmo de Marsaglia Bray
+  double media = params[0];
+  double des   = params[1];
   double uni,v,w,x,sum;
   x=0;
   uni = RanMT();
